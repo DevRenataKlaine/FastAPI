@@ -14,10 +14,6 @@ Rotas e handlers bem definidos; Testes automatizados; Dependências de build; e 
 - Injeção de dependências com FastAPI (Depends)
 - Documentação automática via OpenAPI
 
-🧾 Licença
-
-Este projeto está licenciado sob MIT License (arquivo LICENSE).
-
 📫 Contribuições
 
 Pull requests e sugestões são bem-vindos! Para bugfixes, testes ou melhorias, abra uma issue ou um pull request. 😀
