@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from fast_zero_schemas import Message, UserDB, UserList, UserPublic, UserSchema
+from .fast_zero_schemas import Message, UserDB, UserList, UserPublic, UserSchema
 from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
