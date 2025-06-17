@@ -5,9 +5,6 @@ from sqlalchemy import engine_from_config, pool
 from alembic import context
 from fast_zero.database import Base
 
-from fast_zero.database import Base
-from fast_zero.models import User
-
 target_metadata = Base.metadata
 
 

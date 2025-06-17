@@ -1,8 +1,11 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
 
-DATABASE_URL = "postgresql://user:password@localhost/dbname"
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(bind=engine)
-Base = declarative_base()
+from fast_zero.settings import Settings
+
+engine = create_engine(Settings.DATABASE_URL)
+
+
+def get_session():  # pragma: no cover
+    with Session(engine) as session:
+        yield session
