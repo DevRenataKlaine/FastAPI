@@ -21,6 +21,7 @@ pytest = "^8.3.5"
 pytest-cov = "^6.1.1"
 taskipy = "^1.14.1"
 ruff = "^0.11.10"
+sqlalchemy = "^2.0.41"
 
 [tool.ruff]
 line-length = 79
@@ -46,3 +47,6 @@ run = 'fastapi dev fast_zero/app.py'
 pre_test = 'task lint'
 test = 'pytest -s -x --cov=fast_zero -vv'
 post_test = 'coverage html'
+
+[tool.poetry.plugins."console_scripts"]
+task = "taskipy.cli:task"
