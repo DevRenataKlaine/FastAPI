@@ -5,7 +5,6 @@ from fastapi import FastAPI
 from fast_zero.routers import auth, users
 from fast_zero.schemas import Message
 
-
 app = FastAPI()
 
 app.include_router(users.router)
