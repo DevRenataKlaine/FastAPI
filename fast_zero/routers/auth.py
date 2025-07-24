@@ -24,9 +24,7 @@ CurrentUser = Annotated[User, Depends(get_current_user)]
 
 @router.post('/token', response_model=Token)
 async def login_for_access_token(form_data: OAuth2Form, session: Session):  # type: ignore
-    user = session.scalar(
-        select(User).where(User.email == form_data.username)
-    )
+    user = session.scalar(select(User).where(User.email == form_data.username))
 
     if not user:
         raise HTTPException(

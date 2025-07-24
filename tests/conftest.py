@@ -88,7 +88,7 @@ async def other_user(session):
     await session.refresh(user)
 
     user.clean_password = password
-    
+
     return user
 
 
@@ -101,10 +101,10 @@ def token(client, user):
     return response.json()['access_token']
 
 
-class UserFactory(factory.factory): # type: ignore
+class UserFactory(factory.factory):  # type: ignore
     class Meta:
         model = User
 
-    username = factory.Sequence(lambda n: f'test{n}') # type: ignore
-    email = factory.LazyAttribute(lambda obj: f'{obj.username}@test.com') # type: ignore
-    password = factory.LazyAttribute(lambda obj: f'{obj.username}@example.com') # type: ignore
+    username = factory.Sequence(lambda n: f'test{n}')  # type: ignore
+    email = factory.LazyAttribute(lambda obj: f'{obj.username}@test.com')  # type: ignore
+    password = factory.LazyAttribute(lambda obj: f'{obj.username}@example.com')  # type: ignore
