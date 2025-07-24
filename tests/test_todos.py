@@ -1,26 +1,31 @@
 from http import HTTPStatus
 
-import factory.fuzzy
-import pytest
+import factory.fuzzy # type: ignore
+import pytest # type: ignore
 
 from fast_zero.models import Todo, TodoState
+from tests.factories import TodoFactory # type: ignore
 
 
-def test_create_todo(client, token):
-    response = client.post(
-        '/todos/',
-        headers={'Authorization': f'Bearer {token}'},
-        json={
-            'title': 'Test todo',
-            'description': 'Test todo description',
-            'state': 'draft',
-        },
-    )
+def test_create_todo(client, token, mock_db_time):
+    with mock_db_time(model=Todo) as time:
+        response = client.post(
+            '/todos/',
+            headers={'Authorization': f'Bearer {token}'},
+            json={
+                'title': 'Test todo',
+                'description': 'Test todo description',
+                'state': 'draft',
+            },
+        )
+
     assert response.json() == {
         'id': 1,
         'title': 'Test todo',
         'description': 'Test todo description',
         'state': 'draft',
+        'created_at': time.isoformat(),
+        'updated_at': time.isoformat()
     }
 
 
@@ -152,6 +157,31 @@ async def test_list_todos_filter_combined_should_return_5_todos(
     assert len(response.json()['todos']) == expected_todos
 
 
+@pytest.mark.asyncio
+async def test_list_todos_should_return_all_expected_fields__exercicio(
+    session, client, user, token, mock_db_time
+):
+    with mock_db_time(model=Todo) as time:
+        todo = TodoFactory.create(user_id=user.id)
+        session.add(todo)
+        await session.commit()
+
+    await session.refresh(todo)
+    response = client.get(
+        '/todos/',
+        headers={'Authorization': f'Bearer {token}'},
+    )
+
+    assert response.json()['todos'] == [{
+        'created_at': time.isoformat(),
+        'updated_at': time.isoformat(),
+        'description': todo.description,
+        'id': todo.id,
+        'state': todo.state,
+        'title': todo.title,
+    }]
+
+
 def test_patch_todo_error(client, token):
     response = client.patch(
         '/todos/10',
@@ -202,6 +232,26 @@ def test_delete_todo_error(client, token):
 
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {'detail': 'Task not found.'}
+
+
+def test_list_todos_filter_min_length_exercicio_06(client, token): # type: ignore
+    tiny_string = 'a'
+    response = client.get(
+        f'/todos/?title={tiny_string}',
+        headers={'Authorization': f'Bearer {token}'},
+    )
+
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+
+
+def test_list_todos_filter_max_length_exercicio_06(client, token): # type: ignore
+    large_string = 'a' * 22
+    response = client.get(
+        f'/todos/?title={large_string}',
+        headers={'Authorization': f'Bearer {token}'},
+    )
+
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
 
 def test_list_todos_filter_min_length_exercicio_06(client, token):
