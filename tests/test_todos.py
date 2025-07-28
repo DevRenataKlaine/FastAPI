@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-import factory.fuzzy
+import factory.fuzzy # type: ignore
 import pytest
 
 from fast_zero.models import Todo, TodoState

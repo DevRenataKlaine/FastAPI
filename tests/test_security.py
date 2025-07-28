@@ -26,7 +26,7 @@ def test_jwt_invalid_token(client):
     assert response.json() == {'detail': 'Could not validate credentials'}
 
 
-def test_get_current_user_not_found__exercicio(client):
+def test_get_current_user_not_found(client):
     data = {'no-email': 'test'}
     token = create_access_token(data)
 
@@ -39,7 +39,7 @@ def test_get_current_user_not_found__exercicio(client):
     assert response.json() == {'detail': 'Could not validate credentials'}
 
 
-def test_get_current_user_does_not_exists__exercicio(client):
+def test_get_current_user_does_not_exists(client):
     data = {'sub': 'test@test'}
     token = create_access_token(data)
 

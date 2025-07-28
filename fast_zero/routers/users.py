@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fast_zero.database import get_session
 from fast_zero.models import User
 from fast_zero.schemas import (
-    FilterPage,
+    Page,
     Message,
     UserList,
     UserPublic,
@@ -62,7 +62,7 @@ async def create_user(user: UserSchema, session: Session):
 
 @router.get('/', response_model=UserList)
 async def read_users(
-    session: Session, filter_users: Annotated[FilterPage, Query()]
+    session: Session, filter_users: Annotated[Page, Query()]
 ):
     query = await session.scalars(
         select(User).offset(filter_users.offset).limit(filter_users.limit)
@@ -101,7 +101,7 @@ async def update_user(
 
 
 @router.delete('/{user_id}', response_model=Message)
-def delete_user(
+async def delete_user(
     user_id: int,
     session: Session,
     current_user: CurrentUser,
@@ -111,7 +111,7 @@ def delete_user(
             status_code=HTTPStatus.FORBIDDEN, detail='Not enough permissions'
         )
 
-    session.delete(current_user)
-    session.commit()
+    await session.delete(current_user)
+    await session.commit()
 
     return {'message': 'User deleted'}

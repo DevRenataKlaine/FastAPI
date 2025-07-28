@@ -2,16 +2,18 @@ import asyncio
 
 from logging.config import fileConfig
 
-from sqlalchemy import async_engine_from_config # type: ignore
+from sqlalchemy.ext.asyncio import async_engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
 
 from fast_zero.models import table_registry
 from fast_zero.settings import Settings
+from typing import cast, Dict, Any  # ✅ (Novo: usado para tipagem segura)
+
 
 config = context.config
-config.set_main_option('sqlalchemy.url', Settings.DATABASE_URL)
+config.set_main_option('sqlalchemy.url', Settings().DATABASE_URL)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
@@ -56,8 +58,12 @@ def do_run_migrations(connection):
 
 
 async def run_async_migrations():
+    section = config.get_section(config.config_ini_section)
+    if section is None:
+        raise ValueError("Config section not found.")  # ✅ (Validação explícita adicionada)
+
     connectable = async_engine_from_config(
-        config.get_section(config.config_ini_section),
+        cast(Dict[str, Any], section),  # ✅ (Forçando tipagem segura)
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
@@ -70,6 +76,7 @@ async def run_async_migrations():
 
 def run_migrations_online():
     asyncio.run(run_async_migrations())
+
 
 if context.is_offline_mode():
     run_migrations_offline()

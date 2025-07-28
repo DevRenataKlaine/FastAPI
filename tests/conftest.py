@@ -101,10 +101,10 @@ def token(client, user):
     return response.json()['access_token']
 
 
-class UserFactory(factory.factory):  # type: ignore
-    class Meta:
+class UserFactory(factory.Factory):  # pyright: ignore[reportPrivateImportUsage]
+    class Meta: # pyright: ignore[reportIncompatibleVariableOverride]
         model = User
 
     username = factory.Sequence(lambda n: f'test{n}')  # type: ignore
-    email = factory.LazyAttribute(lambda obj: f'{obj.username}@test.com')  # type: ignore
-    password = factory.LazyAttribute(lambda obj: f'{obj.username}@example.com')  # type: ignore
+    email = factory.LazyAttribute(lambda obj: f'{obj.username}@test.com') # pyright: ignore[reportPrivateImportUsage]
+    password = factory.LazyAttribute(lambda obj: f'{obj.username}@example.com')  # pyright: ignore[reportPrivateImportUsage]

@@ -13,7 +13,7 @@ from fast_zero.schemas import (
     TodoList,
     TodoPublic,
     TodoSchema,
-    TodoUpdate,  # type: ignore
+    TodoUpdate,
 )
 from fast_zero.security import get_current_user
 

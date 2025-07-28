@@ -23,8 +23,10 @@ CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
 @router.post('/token', response_model=Token)
-async def login_for_access_token(form_data: OAuth2Form, session: Session):  # type: ignore
-    user = session.scalar(select(User).where(User.email == form_data.username))
+async def login_for_access_token(form_data: OAuth2Form, session: Session): 
+    user = await session.scalar(
+        select(User).where(User.email == form_data.username)
+    )
 
     if not user:
         raise HTTPException(
@@ -32,13 +34,13 @@ async def login_for_access_token(form_data: OAuth2Form, session: Session):  # ty
             detail='Incorrect email or password',
         )
 
-    if not verify_password(form_data.password, user.password):  # type: ignore
+    if not verify_password(form_data.password, user.password):
         raise HTTPException(
             status_code=HTTPStatus.UNAUTHORIZED,
             detail='Incorrect email or password',
         )
 
-    access_token = create_access_token(data={'sub': user.email})  # type: ignore
+    access_token = create_access_token(data={'sub': user.email})
 
     return {'access_token': access_token, 'token_type': 'bearer'}
 
