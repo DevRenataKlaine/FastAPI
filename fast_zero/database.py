@@ -1,8 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import declarative_base
 
 from fast_zero.settings import Settings
 
-
+Base = declarative_base()
 engine = create_async_engine(Settings().DATABASE_URL)  # type: ignore
 
 

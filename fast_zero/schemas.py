@@ -2,9 +2,6 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from fast_zero.models import TodoState
 
-from fastapi_pagination import Page, Params
-from fastapi_pagination.ext.sqlalchemy import paginate
-
 
 class Message(BaseModel):
     message: str
@@ -32,6 +29,11 @@ class Token(BaseModel):
     token_type: str
 
 
+class FilterPage(BaseModel):
+    offset: int = Field(0, ge=0)
+    limit: int = Field(100, ge=1)
+
+
 class TodoSchema(BaseModel):
     title: str
     description: str
@@ -46,7 +48,7 @@ class TodoList(BaseModel):
     todos: list[TodoPublic]
 
 
-class FilterTodo(Page[TodoPublic]):
+class FilterTodo(FilterPage):
     title: str | None = Field(None, min_length=3, max_length=20)
     description: str | None = Field(None, min_length=3, max_length=20)
     state: TodoState | None = None

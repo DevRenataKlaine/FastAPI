@@ -1,4 +1,5 @@
 import asyncio
+import sys
 
 from logging.config import fileConfig
 
@@ -17,6 +18,10 @@ config.set_main_option('sqlalchemy.url', Settings().DATABASE_URL)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+
+if sys.platform == 'win32':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 
 target_metadata = table_registry.metadata
 

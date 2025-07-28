@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fast_zero.database import get_session
 from fast_zero.models import User
 from fast_zero.schemas import (
-    Page,
+    FilterPage,
     Message,
     UserList,
     UserPublic,
@@ -62,7 +62,7 @@ async def create_user(user: UserSchema, session: Session):
 
 @router.get('/', response_model=UserList)
 async def read_users(
-    session: Session, filter_users: Annotated[Page, Query()]
+    session: Session, filter_users: Annotated[FilterPage, Query()]
 ):
     query = await session.scalars(
         select(User).offset(filter_users.offset).limit(filter_users.limit)

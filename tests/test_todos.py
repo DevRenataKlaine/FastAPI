@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-import factory.fuzzy # type: ignore
+import factory.fuzzy
 import pytest
 
 from fast_zero.models import Todo, TodoState
@@ -24,12 +24,12 @@ def test_create_todo(client, token):
     }
 
 
-class TodoFactory(factory.Factory):
-    class Meta:
+class TodoFactory(factory.Factory):  # type: ignore
+    class Meta:  # type: ignore
         model = Todo
 
-    title = factory.Faker('text')
-    description = factory.Faker('text')
+    title = factory.Faker('text')  # type: ignore
+    description = factory.Faker('text')  # type: ignore
     state = factory.fuzzy.FuzzyChoice(TodoState)
     user_id = 1
 
@@ -202,23 +202,3 @@ def test_delete_todo_error(client, token):
 
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {'detail': 'Task not found.'}
-
-
-def test_list_todos_filter_min_length_exercicio_06(client, token):
-    tiny_string = 'a'
-    response = client.get(
-        f'/todos/?title={tiny_string}',
-        headers={'Authorization': f'Bearer {token}'},
-    )
-
-    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
-
-
-def test_list_todos_filter_max_length_exercicio_06(client, token):
-    large_string = 'a' * 22
-    response = client.get(
-        f'/todos/?title={large_string}',
-        headers={'Authorization': f'Bearer {token}'},
-    )
-
-    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY

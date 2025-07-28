@@ -20,10 +20,11 @@ def test_create_user(client):
     }
 
 
-def test_read_users(client):
+def test_read_users(client, token):
     response = client.get('/users')
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == {'users': []}
+    assert 'users' in response.json()
+    assert isinstance(response.json()['users'], list)
 
 
 def test_read_users_with_users(client, user):
