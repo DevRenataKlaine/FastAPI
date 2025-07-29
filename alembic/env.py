@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 from alembic import context
 
 from fast_zero.database import Base
-from fast_zero.settings import Settings  # Para pegar a URL do banco
+from fast_zero.settings import Settings     # Para pegar a URL do banco
 
 config = context.config
 
@@ -29,11 +29,15 @@ def run_migrations_offline() -> None:
 
 async def run_migrations_online() -> None:
     url = Settings().DATABASE_URL  # type: ignore
-    connectable: AsyncEngine = create_async_engine(url, poolclass=pool.NullPool)
+    connectable: AsyncEngine = create_async_engine(
+        url, poolclass=pool.NullPool
+    )
 
     async with connectable.connect() as connection:
         await connection.run_sync(
-            lambda sync_conn: context.configure(connection=sync_conn, target_metadata=target_metadata)
+            lambda sync_conn: context.configure(
+                connection=sync_conn, target_metadata=target_metadata
+            )
         )
         with context.begin_transaction():
             context.run_migrations()
