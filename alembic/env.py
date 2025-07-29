@@ -1,10 +1,11 @@
 from logging.config import fileConfig
+
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
-from alembic import context
 
+from alembic import context
 from fast_zero.database import Base
-from fast_zero.settings import Settings     # Para pegar a URL do banco
+from fast_zero.settings import Settings  # Para pegar a URL do banco
 
 config = context.config
 
